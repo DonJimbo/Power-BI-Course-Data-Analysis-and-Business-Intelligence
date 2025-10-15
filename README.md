@@ -37,6 +37,15 @@ By completing the course and working through exercises and challenges, I develop
 
 ---
 
+## 🗓️ Completion Details
+
+- **Institution:** datdata (via Udemy)  
+- **Program Duration:** ~6 months (self-paced)  
+- **Completion Year:** 2024  
+- **Certificate Verification:** [Certification](https://www.udemy.com/certificate/UC-5da17543-21b5-4cba-8dd7-41f55179f227/)
+
+---
+
 ## 🧠 My Learning Journey
 
 Completing this course marked a major milestone in my data analytics journey.  
