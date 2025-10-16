@@ -1,0 +1,34 @@
+table DimChannel
+	lineageTag: 1338a3fd-45c1-4d39-ac4a-ccffe3039131
+
+	column ChannelKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 062c5cc1-0e7d-40ec-b98b-36b89c0a220f
+		summarizeBy: none
+		sourceColumn: ChannelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelName
+		dataType: string
+		lineageTag: 05cd0094-f5cb-4c25-80f9-9929167c2259
+		summarizeBy: none
+		sourceColumn: ChannelName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimChannel = m
+		mode: import
+		source =
+				let
+				    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+				    _DimChannel = Source{[Schema="",Item="DimChannel"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(_DimChannel,{"ChannelKey", "ChannelName"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

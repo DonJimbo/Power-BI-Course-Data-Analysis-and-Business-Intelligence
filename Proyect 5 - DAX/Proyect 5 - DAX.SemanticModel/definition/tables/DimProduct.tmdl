@@ -1,0 +1,171 @@
+table DimProduct
+	lineageTag: c45f0093-adba-470c-9507-5f1efa8ca50f
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: e852e8ae-d7b8-4f57-aadc-9c0650d43e3b
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 623a2713-753a-48f2-b73a-ab799894a176
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductDescription
+		dataType: string
+		lineageTag: 6226f72c-0a34-4e8a-b367-4f48f4dfcc04
+		summarizeBy: none
+		sourceColumn: ProductDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductSubcategoryKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 666593c0-a2fc-42c0-97a9-7a408d2437d6
+		summarizeBy: none
+		sourceColumn: ProductSubcategoryKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Manufacturer
+		dataType: string
+		lineageTag: 05b78fcb-caf7-45f1-8c4a-b19439bfab7f
+		summarizeBy: none
+		sourceColumn: Manufacturer
+
+		annotation SummarizationSetBy = Automatic
+
+	column BrandName
+		dataType: string
+		lineageTag: 98c43828-a537-42ea-8996-bedd99dbb37b
+		summarizeBy: none
+		sourceColumn: BrandName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClassID
+		dataType: string
+		lineageTag: f45ac993-3dc1-41b1-a5cd-6ffd8cdc5970
+		summarizeBy: none
+		sourceColumn: ClassID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClassName
+		dataType: string
+		lineageTag: 1000277e-c511-4905-822c-f8d4e6acff26
+		summarizeBy: none
+		sourceColumn: ClassName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColorID
+		dataType: string
+		lineageTag: 3a9d5b60-ff97-474d-ac82-058547fda8b6
+		summarizeBy: none
+		sourceColumn: ColorID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColorName
+		dataType: string
+		lineageTag: 04bac590-94e5-43b5-9941-e33d850629f5
+		summarizeBy: none
+		sourceColumn: ColorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Size
+		dataType: string
+		lineageTag: 61341cef-99f4-4a0e-8f4f-8f2d3e1701b8
+		summarizeBy: none
+		sourceColumn: Size
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weight
+		dataType: double
+		lineageTag: e5d56edc-0bff-47b4-89df-267d9d97e9af
+		summarizeBy: none
+		sourceColumn: Weight
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnitCost
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 61520754-2b7e-4d60-a64a-5461513ab904
+		summarizeBy: none
+		sourceColumn: UnitCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column UnitPrice
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 61dd3744-62c2-4fc0-ac5a-2dbd7b06c260
+		summarizeBy: none
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column ProductSubcategoryName
+		dataType: string
+		lineageTag: dc492220-c6af-431f-a0ec-749328cbc2e9
+		summarizeBy: none
+		sourceColumn: ProductSubcategoryName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: ea7a2673-7658-4e62-ac57-9ac81bb87074
+		summarizeBy: none
+		sourceColumn: ProductCategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCategory
+		dataType: string
+		lineageTag: 573a9d3b-c547-4922-af3e-83f735f940d0
+		summarizeBy: none
+		sourceColumn: ProductCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProduct = m
+		mode: import
+		source =
+				let
+				    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+				    _DimProduct = Source{[Schema="",Item="DimProduct"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(_DimProduct,{"ProductKey", "ProductName", "ProductDescription", "ProductSubcategoryKey", "Manufacturer", "BrandName", "ClassID", "ClassName", "ColorID", "ColorName", "Size", "Weight", "UnitCost", "UnitPrice"}),
+				    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"ProductSubcategoryKey"}, DimProductSubcategory, {"ProductSubcategoryKey"}, "DimProductSubcategory", JoinKind.LeftOuter),
+				    #"Expanded DimProductSubcategory" = Table.ExpandTableColumn(#"Merged Queries", "DimProductSubcategory", {"ProductSubcategoryName", "ProductCategoryKey", "ProductCategory"}, {"ProductSubcategoryName", "ProductCategoryKey", "ProductCategory"})
+				in
+				    #"Expanded DimProductSubcategory"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
