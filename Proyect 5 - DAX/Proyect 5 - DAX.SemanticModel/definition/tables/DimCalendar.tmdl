@@ -1,0 +1,204 @@
+table DimCalendar
+	lineageTag: af227be3-2c94-49c0-b932-3ede013aa8c3
+	dataCategory: Time
+
+	column DateKey
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 0ad080a9-f782-4b38-b1e4-9eaf381c298f
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CalendarYear
+		dataType: int64
+		formatString: 0
+		lineageTag: 5c472ff4-4bb3-42e3-862c-a0788a55a9c4
+		summarizeBy: sum
+		sourceColumn: CalendarYear
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarHalfYearLabel
+		dataType: string
+		lineageTag: 8eb3d57e-ecf0-4296-8f86-d9f6e5f982db
+		summarizeBy: none
+		sourceColumn: CalendarHalfYearLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarQuarterLabel
+		dataType: string
+		lineageTag: fb816adb-b1f0-4c3a-9bff-2339c16aead9
+		summarizeBy: none
+		sourceColumn: CalendarQuarterLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: 54fbc682-bd45-42e7-bc87-86e3ebec8df2
+		summarizeBy: sum
+		sourceColumn: CalendarMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarMonthLabel
+		dataType: string
+		lineageTag: b55dab8d-df63-46aa-ac3d-d5f74dc443a4
+		summarizeBy: none
+		sourceColumn: CalendarMonthLabel
+		sortByColumn: Month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarWeekLabel
+		dataType: string
+		lineageTag: d7124042-0fb2-429b-8160-c66b8ce2dfb4
+		summarizeBy: none
+		sourceColumn: CalendarWeekLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalendarDayOfWeekLabel
+		dataType: string
+		lineageTag: 926a8616-5ebc-451e-ad1b-f98493588d13
+		summarizeBy: none
+		sourceColumn: CalendarDayOfWeekLabel
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsWorkDay
+		dataType: string
+		lineageTag: d2c47dd5-8f3c-4c60-baae-78a796edee74
+		summarizeBy: none
+		sourceColumn: IsWorkDay
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR(DimCalendar[DateKey])
+		formatString: 0
+		lineageTag: d930fe39-4353-431a-a496-c1df7defa8f0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter = "Trimestre " & QUARTER(DimCalendar[DateKey])
+		lineageTag: 0231e930-f4b1-4fff-8a29-0e1030cc8461
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month = MONTH(DimCalendar[DateKey])
+		formatString: 0
+		lineageTag: 87f61caf-da5d-47fa-86d2-be4839e4b2eb
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day = DAY(DimCalendar[DateKey])
+		formatString: 0
+		lineageTag: 95e18cdf-ed53-4165-b21c-073851e10a2a
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Year' = WEEKNUM(DimCalendar[DateKey])
+		formatString: 0
+		lineageTag: 62a5643e-4194-40a4-b73f-eb832325c4ba
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayWeek = WEEKDAY(DimCalendar[DateKey],2)
+		formatString: 0
+		lineageTag: d2d05ff0-f77c-454e-b0c7-50a7ba44e89c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Weekend =
+			
+			IF(OR(DimCalendar[DayWeek]=6 ,DimCalendar[DayWeek]=7),
+			"Fin de Semana",
+			"Entre Semana"
+			)
+		lineageTag: 026ba5d2-e88c-40e9-a2ea-52072ad9e22d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Bad Luck' =
+			
+			IF((DimCalendar[CalendarDayOfWeekLabel] = "Tuesday" || DimCalendar[CalendarDayOfWeekLabel] = "Friday") && DimCalendar[Day] = 13,
+			    "Mala suerte",
+			    "Dia normal"
+			)
+		lineageTag: 74ee1dfb-7290-4312-ba60-2e7e0cd7f38d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Short' =
+			
+			LEFT(DimCalendar[CalendarMonthLabel],3)
+		lineageTag: 9f428e61-21ea-4813-ba70-134a7a968b88
+		summarizeBy: none
+		sortByColumn: Month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Week Name' =
+			
+			FORMAT(DimCalendar[DateKey],"MMMM")
+		lineageTag: 20666d1b-e67c-45dc-bb77-fab64b277119
+		summarizeBy: none
+		sortByColumn: Month
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name' =
+			
+			FORMAT(DimCalendar[DateKey], "DDDD")
+		lineageTag: 8d93bb44-92b9-4665-a670-e27d0d67a228
+		summarizeBy: none
+		sortByColumn: DayWeek
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Format =
+			
+			LOWER(DimCalendar[Weekend])
+		lineageTag: acbcde99-f191-4412-8004-e10be5c6f021
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCalendar = m
+		mode: import
+		source =
+				let
+				    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+				    _DimCalendar = Source{[Schema="",Item="DimCalendar"]}[Data],
+				    #"Removed Other Columns" = Table.SelectColumns(_DimCalendar,{"DateKey", "CalendarYear", "CalendarHalfYearLabel", "CalendarQuarterLabel", "CalendarMonth", "CalendarMonthLabel", "CalendarWeekLabel", "CalendarDayOfWeekLabel", "IsWorkDay"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Other Columns",{{"DateKey", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,52 @@
+table 'Parameter Measure'
+	lineageTag: 2ff735de-b8be-4cc1-a02e-14e01294285c
+
+	column 'Parameter Measure'
+		lineageTag: e95ea5ad-5fb5-4d61-9d91-c21769cc80b8
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Parameter Measure Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Parameter Measure Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Measure Fields'
+		isHidden
+		lineageTag: 7f30c722-435e-47ae-8eac-f525add49bc5
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Parameter Measure Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parameter Measure Order'
+		isHidden
+		formatString: 0
+		lineageTag: ebc58ced-c3fb-4a27-bebb-e966b2043d11
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Parameter Measure' = calculated
+		mode: import
+		source =
+				{
+				    ("Total Ingresos", NAMEOF('Medidas DAX'[Total Revenue]), 0),
+				    ("Total Costos", NAMEOF('Medidas DAX'[Total Costs]), 1),
+				    ("Total Beneficios", NAMEOF('Medidas DAX'[Total Benefits]), 2),
+				    ("% Margen", NAMEOF('Medidas DAX'[% Margen]), 3),
+				    ("Total Ordenes", NAMEOF('Medidas DAX'[Total Returns]), 4),
+				    ("Cantidad Total", NAMEOF('Medidas DAX'[Total Quantity]), 5)
+				}
+
+	annotation PBI_Id = 7f30893db9504d32bf7f2da1db362277
+

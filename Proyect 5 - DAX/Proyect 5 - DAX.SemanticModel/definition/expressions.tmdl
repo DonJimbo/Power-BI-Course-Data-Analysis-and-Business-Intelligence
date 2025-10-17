@@ -1,0 +1,39 @@
+expression DimProductCategory =
+		let
+		    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+		    _DimProductCategory = Source{[Schema="",Item="DimProductCategory"]}[Data]
+		in
+		    _DimProductCategory
+	lineageTag: 98ccf39d-40da-46c8-ad1a-dd2c3e51e687
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression DimProductSubcategory =
+		let
+		    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+		    _DimProductSubcategory = Source{[Schema="",Item="DimProductSubcategory"]}[Data],
+		    #"Removed Other Columns" = Table.SelectColumns(_DimProductSubcategory,{"ProductSubcategoryKey", "ProductSubcategoryName", "ProductCategoryKey"}),
+		    #"Merged Queries" = Table.NestedJoin(#"Removed Other Columns", {"ProductCategoryKey"}, DimProductCategory, {"ProductCategoryKey"}, "DimProductCategory", JoinKind.LeftOuter),
+		    #"Expanded DimProductCategory" = Table.ExpandTableColumn(#"Merged Queries", "DimProductCategory", {"ProductCategory"}, {"ProductCategory"})
+		in
+		    #"Expanded DimProductCategory"
+	lineageTag: a1bc52b5-e268-4e42-b7f8-f1f2928704e3
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression DimGeography =
+		let
+		    Source = Access.Database(File.Contents("C:\Users\jrodriji\OneDrive - NTT DATA EMEAL\Learning\Power BI\Excels Proyectos\Proyecto 5 - DAX\ContosoSales.accdb"), [CreateNavigationProperties=true]),
+		    _DimGeography = Source{[Schema="",Item="DimGeography"]}[Data]
+		in
+		    _DimGeography
+	lineageTag: 662cb894-a4ee-42b0-8db4-1c98effbce59
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

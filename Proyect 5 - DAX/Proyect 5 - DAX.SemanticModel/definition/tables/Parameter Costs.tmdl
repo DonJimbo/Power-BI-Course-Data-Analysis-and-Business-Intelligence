@@ -1,0 +1,27 @@
+table 'Parameter Costs'
+	lineageTag: b85339d7-4919-4fbe-aab8-b0fd4d55ba5d
+
+	measure 'Parameter Costs Value' = SELECTEDVALUE('Parameter Costs'[Parameter Costs])
+		lineageTag: 321baa7e-550e-47f6-b718-73e9be386875
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Parameter Costs'
+		formatString: 0%;-0%;0%
+		lineageTag: 33e7c0c9-2e61-46c1-87df-599b610bf13d
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+		annotation SummarizationSetBy = User
+
+	partition 'Parameter Costs' = calculated
+		mode: import
+		source = GENERATESERIES(-0.5, 0.5, 0.01)
+
+	annotation PBI_Id = 7f2c89e917c94cf6abe20820d8b8e3d3
+

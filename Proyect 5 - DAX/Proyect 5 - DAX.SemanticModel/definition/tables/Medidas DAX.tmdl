@@ -1,0 +1,362 @@
+table 'Medidas DAX'
+	lineageTag: e0a029ad-fb3c-4501-b3f4-593d6a1abc42
+
+	measure 'Number of Returns' =
+			
+			SUM(FactSales[ReturnQuantity])
+		formatString: #,0
+		lineageTag: 3e77e1ef-e3c8-4ddc-b3c3-f858b0ae94aa
+
+	measure 'Total Quantity' = -[Number of Returns]+[Sales Quantity]
+		formatString: #,0
+		lineageTag: b1e748d6-70b9-42a2-b6a0-29b0cacf6f4e
+
+	measure 'Sales Quantity' =
+			
+			SUM(FactSales[SalesQuantity])
+		formatString: #,0
+		lineageTag: 821ecfdf-cb8e-4fbd-9284-e340275370a6
+
+	measure 'Return Ratio' =
+			
+			DIVIDE([Number of Returns],[Sales Quantity],0)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c2f4021c-2cb0-4f37-b1dc-744e661296c7
+
+	measure 'PU Average' =
+			
+			AVERAGE(DimProduct[UnitPrice])
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 289d11c7-7c4d-4740-b68d-bf2b9d7296db
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Number of Stores' = ```
+			
+			 COUNTROWS(DimStores)
+			```
+		formatString: 0
+		lineageTag: 8376f6bb-3ea1-4df3-b78c-06617d9a20cb
+
+	measure 'Number of Stores with Sales' =
+			
+			DISTINCTCOUNT(FactSales[StoreKey])
+		formatString: 0
+		lineageTag: a6435b3e-d632-431b-9013-18a37aedc717
+
+	measure 'Number of Regions' =
+			
+			COUNTA(DimStores[RegionCountryName])
+		formatString: 0
+		lineageTag: fbe51841-f564-45fd-8072-b8216f9ebd7a
+
+	measure 'Number of Blank Regions' =
+			
+			COUNTBLANK(DimStores[RegionCountryName])
+		formatString: 0
+		lineageTag: c66e4964-f6f7-4523-93bd-e69520144b2e
+
+	measure 'Number of Different Regions' =
+			
+			DISTINCTCOUNT(DimStores[RegionCountryName])
+		formatString: 0
+		lineageTag: bfd3930d-8db4-441d-ad8a-dfcf8636262a
+
+	measure 'Total Returns' =
+			
+			COUNTROWS(FactSales)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 375a295d-74b7-4493-bec4-16733e073117
+
+	measure 'Total Returned Orders' =
+			
+			CALCULATE(
+			    [Total Returns],
+			    FactSales[ReturnQuantity] > 0 //,
+			    //DimChannel[ChannelName] = "Store"
+			)
+		formatString: #,0
+		lineageTag: c82292e3-3971-484a-82af-b506017dac50
+
+	measure 'ALL Total Orders' =
+			
+			CALCULATE(
+			    [Total Returns],
+			    ALL(FactSales)
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: c73c6dc1-d74b-4080-b88e-b8ef51c325dc
+
+	measure '% All Ordenes' =
+			
+			DIVIDE([Total Returns],[ALL Total Orders],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 0dcd2d0e-c6c6-41f3-b617-f3c3593e02f3
+
+	measure '% ALL Computers Category' =
+			
+			DIVIDE(
+			    [Total Returns],
+			    CALCULATE(
+			        [Total Returns],
+			        FILTER(ALL(DimProduct), DimProduct[ProductCategory]= "Computers"
+			        )
+			    ),0
+			)
+		formatString: 0%;-0%;0%
+		lineageTag: 8e007d9e-ec86-42ce-b9b4-75f3327d461e
+
+	measure 'Total Revenue' = ```
+			
+			SUMX(FactSales,
+			    (FactSales[SalesQuantity] -FactSales[ReturnQuantity]) * 
+			    FactSales[Wholesale Discount] * 
+			    RELATED(DimProduct[UnitPrice]) *
+			    (1- RELATED(DimPromotion[DiscountPercent]))
+			)
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 8b0354db-cef4-471d-af1e-703f41d35542
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'YTD Revenue' = ```
+			
+			//Year to date
+			CALCULATE( 
+			    [Total Revenue],
+			    DATESYTD(DimCalendar[DateKey])
+			)
+			```
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 3faa98e0-aaed-413a-9b5a-2d6e41c977c7
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'YTD Revenue 2' =
+			
+			TOTALYTD(
+			    [Total Revenue],DimCalendar[DateKey]
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 998bf624-1506-4739-9805-9e3c09216363
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'MTD Revenue' =
+			
+			TOTALMTD(
+			    [Total Revenue],DimCalendar[DateKey]
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: fd54cdc4-d228-4b8d-a3ec-99837d2e09d9
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'MTD Revenue 2' =
+			
+			CALCULATE(
+			    [Total Revenue],
+			    DATESMTD(DimCalendar[DateKey]
+			    )
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 10437e34-4ac2-4208-8da1-fc55139f9b38
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Revenue LM' =
+			
+			CALCULATE(
+			    [Total Revenue],
+			    DATEADD(
+			        DimCalendar[DateKey],
+			        -1,MONTH
+			        )
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 72cd6d2c-2c40-4198-9474-32d8c2e075cd
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Revenue LY' =
+			
+			// Last Year
+			CALCULATE(
+			    [Total Revenue],
+			    SAMEPERIODLASTYEAR(DimCalendar[DateKey])
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: eea2368b-6a68-4f9f-b9cd-ae7c7d7bf454
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Revenue Var LY' = ```
+			
+			[Total Revenue] -[Total Revenue LY]
+			
+			```
+		formatString: \$#,0.000;(\$#,0.000);\$#,0.000
+		lineageTag: 05632dc0-2f47-4ba9-80a6-99d55e633d01
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Revenue LY 2' =
+			
+			CALCULATE(
+			    [Total Revenue],
+			    DATEADD(DimCalendar[DateKey],-1,YEAR
+			    )
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 5d9ba199-3d76-4eb0-ac93-c8c74e078385
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Revenue AD' = ```
+			//Antes de descuento 
+			SUMX(FactSales,
+			    FactSales[SalesQuantity]  * RELATED(DimProduct[UnitPrice]))
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 20352e18-6bc8-42ee-aa0e-cd6c15f8e926
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'RANK Revenue Total Stores' =
+			
+			RANKX(ALL(DimStores), [Total Revenue])
+		formatString: 0
+		lineageTag: d507240d-068e-49c5-85ab-cf0d6698f9f9
+
+	measure 'RANK Revenue Stores' =
+			
+			RANKX(ALL(DimStores[Store]), [Total Revenue])
+		formatString: 0
+		lineageTag: 1e4315d9-bb2d-4a22-9721-712ba833459a
+
+	measure 'RANK Revenue StoresName' =
+			
+			RANKX(ALL(DimStores[Storename]), [Total Revenue])
+		formatString: 0
+		lineageTag: facc0991-604a-4e32-b372-f99ddeae3b09
+
+	measure 'RANK Revenue Store Cat' =
+			
+			SWITCH(
+			    TRUE(),
+			    [RANK Revenue Total Stores] <= 10, "⭐⭐⭐⭐⭐",
+			    [RANK Revenue Total Stores] <= 25, "⭐⭐⭐⭐",
+			    [RANK Revenue Total Stores] <= 50, "⭐⭐⭐",
+			    [RANK Revenue Total Stores] <= 100, "⭐⭐",
+			    "⭐"
+			    )
+		lineageTag: 22d773e2-c07b-4d66-972d-be0dc3360afa
+
+	measure 'Title Revenue' =
+			
+			"Total Revenue: " & FORMAT([Total Revenue], "Currency")
+		lineageTag: e45ee9b7-4079-469d-81e4-517acc4fdabb
+
+	measure 'Title Returns' =
+			
+			VAR indicador = IF([Return Ratio]<=0.01,"✅","❌")
+			RETURN
+			"% Returns " & FORMAT([Return Ratio], "0.00%") & indicador &
+			" | Quantity " & FORMAT([Total Returned Orders], 0.0)
+		lineageTag: 9c6116e2-4ca7-4e9a-a96e-9931da9244e7
+
+	measure 'Title Revenue Var LY' = ```
+			
+			 VAR indicador= IF([Total Revenue Var LY]>0, "✅", "❌")
+			RETURN
+			"Total Revenue " & FORMAT([Total Revenue], "$0,0") & indicador
+			```
+		lineageTag: a4d2515d-a06d-4d09-8c8f-df3ab141c999
+
+	measure 'Title Filters' = ```
+			
+			VAR FiltroAnio = SELECTEDVALUE( DimCalendar[Year], "Multiple")
+			VAR FiltroPro = SELECTEDVALUE( DimProduct[ProductCategory], "Multiple")
+			VAR FiltroCont = SELECTEDVALUE( DimStores[ContinentName], "Multiple")
+			
+			RETURN
+			"Comparison of Total Revenue vs. Previous Year segmented by: 
+			- Year: " & FiltroAnio &
+			" - Category: " & FiltroPro &
+			" - Continent: " & FiltroCont 
+			```
+		lineageTag: 0673eb8a-0c8e-4283-8fa2-0fa39f46273b
+
+	measure 'Total Costs' = ```
+			
+			SUMX(FactSales,
+			    (FactSales[SalesQuantity] - FactSales[ReturnQuantity])
+			    *RELATED(DimProduct[UnitCost])
+			) 
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 18670718-036b-49e3-b225-71b994cde027
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Total Benefits' =
+			
+			[Total Revenue]- [Total Costs]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 5ff5f29a-1f24-4291-9c11-e1d1fa287459
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure '% Margen' =
+			
+			DIVIDE([Total Benefits], [Total Revenue])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8a96d368-da1f-46a2-86e7-3e55ef517fce
+
+	measure 'Simulation Total Revenue' = ```
+			
+			SUMX(FactSales,
+			    (FactSales[SalesQuantity] -FactSales[ReturnQuantity]) * 
+			    FactSales[Wholesale Discount] * 
+			    RELATED(DimProduct[UnitPrice]) * 1 +'Parameter UnitPrice'[Parameter UnitPrice Value]*
+			    (1- RELATED(DimPromotion[DiscountPercent]))
+			)
+			```
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: d1189a35-8cc3-4af2-a2b3-8deea212470b
+
+	measure 'Simulation Total Costs' =
+			
+			SUMX(FactSales,
+			    [Total Costs]* (1 +'Parameter Costs'[Parameter Costs Value])
+			)
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 69059894-82f7-44f7-9413-d7568aa7056b
+
+	measure 'Simulation Total Benefits' =
+			
+			[Simulation Total Revenue] -[Simulation Total Costs]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 74bf5ec9-2930-48a5-b2ad-6428667327e6
+
+	measure 'Simulation % Margin' =
+			
+			[Simulation Total Benefits]/[Simulation Total Revenue]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 38c5eeb5-60f1-4864-884c-f71751e4e0b8
+
+	partition 'Medidas DAX' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
