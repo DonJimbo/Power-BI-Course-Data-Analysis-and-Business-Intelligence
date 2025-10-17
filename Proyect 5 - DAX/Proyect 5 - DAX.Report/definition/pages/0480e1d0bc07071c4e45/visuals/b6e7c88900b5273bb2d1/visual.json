@@ -1,0 +1,166 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "b6e7c88900b5273bb2d1",
+  "position": {
+    "x": 0,
+    "y": 181.42857142857144,
+    "z": 0,
+    "height": 538.57142857142856,
+    "width": 1280
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimProduct"
+                    }
+                  },
+                  "Property": "ProductSubcategoryName"
+                }
+              },
+              "queryRef": "DimProduct.ProductSubcategoryName",
+              "nativeQueryRef": "ProductSubcategoryName"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Total Revenue"
+                }
+              },
+              "queryRef": "Medidas DAX.Total Ingresos",
+              "nativeQueryRef": "Total Ingresos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Total Costs"
+                }
+              },
+              "queryRef": "Medidas DAX.Total Costos",
+              "nativeQueryRef": "Total Costos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Total Benefits"
+                }
+              },
+              "queryRef": "Medidas DAX.Total Beneficios",
+              "nativeQueryRef": "Total Beneficios"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "% Margen"
+                }
+              },
+              "queryRef": "Medidas DAX.% Margen",
+              "nativeQueryRef": "% Margen"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Simulation Total Revenue"
+                }
+              },
+              "queryRef": "Medidas DAX.Simulacion Total Ingresos",
+              "nativeQueryRef": "Simulacion Total Ingresos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Simulation Total Costs"
+                }
+              },
+              "queryRef": "Medidas DAX.Simulacion Total Costos",
+              "nativeQueryRef": "Simulacion Total Costos"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Simulation Total Benefits"
+                }
+              },
+              "queryRef": "Medidas DAX.Simulacion Total Beneficios",
+              "nativeQueryRef": "Simulacion Total Beneficios"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Simulation % Margin"
+                }
+              },
+              "queryRef": "Medidas DAX.Simulacion % Margen",
+              "nativeQueryRef": "Simulacion % Margen"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Medidas DAX"
+                  }
+                },
+                "Property": "Simulation Total Benefits"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

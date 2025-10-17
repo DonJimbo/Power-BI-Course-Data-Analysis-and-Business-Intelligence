@@ -1,0 +1,97 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
+  "name": "bea550493a931b730559",
+  "position": {
+    "x": 448.75,
+    "y": 0,
+    "z": 4000,
+    "height": 180,
+    "width": 831.25,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimStores"
+                    }
+                  },
+                  "Property": "ContinentName"
+                }
+              },
+              "queryRef": "DimStores.ContinentName",
+              "nativeQueryRef": "ContinentName1"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Number of Regions"
+                }
+              },
+              "queryRef": "Medidas DAX.Cantidad Regiones",
+              "nativeQueryRef": "Cantidad Regiones"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Number of Blank Regions"
+                }
+              },
+              "queryRef": "Medidas DAX.Cantidad Regiones en Blanco",
+              "nativeQueryRef": "Cantidad Regiones en Blanco"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas DAX"
+                    }
+                  },
+                  "Property": "Number of Different Regions"
+                }
+              },
+              "queryRef": "Medidas DAX.Cantidad Regiones Distintas",
+              "nativeQueryRef": "Cantidad Regiones Distintas"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimStores"
+                  }
+                },
+                "Property": "ContinentName"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
